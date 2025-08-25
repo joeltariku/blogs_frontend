@@ -1,0 +1,95 @@
+import { useState, type Dispatch, type SetStateAction } from "react";
+import blogService from "../services/blogs";
+import axios from "axios";
+
+type CreateBlogProps = {
+    setMessage: Dispatch<SetStateAction<string>>
+    setIsError: Dispatch<SetStateAction<boolean>>
+}
+
+
+const CreateBlog = ({ setMessage, setIsError }: CreateBlogProps) => {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
+  const [likes, setLikes] = useState(0);
+
+  const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const blog = {
+        title,
+        author,
+        url,
+        likes
+    }
+
+    try {
+        await blogService.create(blog)
+        setMessage(`a new blog "${blog.title}" by ${blog.author} added`)
+    } catch (error) {
+        setIsError(true)
+        if (axios.isAxiosError(error) && error.response) {
+            setMessage(error.response.data.error);
+        } else {
+            setMessage("An unknown error occurred");
+        }
+        console.log(error)
+    } finally {
+        setTimeout(() => {
+            setMessage("")
+            setIsError(false)
+        }, 5000)
+    }
+  }
+
+  return (
+    <>
+      <h2>Create new blog</h2>
+      <form onSubmit={handleCreate}>
+        <div>
+          <label>
+            title
+            <input
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            author
+            <input
+              type="text"
+              value={author}
+              onChange={(event) => setAuthor(event.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            url
+            <input
+              type="text"
+              value={url}
+              onChange={(event) => setUrl(event.target.value)}
+            />
+          </label>
+        </div>
+         <div>
+          <label>
+            likes
+            <input
+              type="number"
+              value={likes}
+              onChange={(event) => setLikes(Number(event.target.value))}
+            />
+          </label>
+        </div>
+        <input type="submit" value="Create" />
+      </form>
+    </>
+  );
+};
+
+export default CreateBlog;
