@@ -4,5 +4,9 @@ export type Blog = {
   author: string;
   likes: number;
   id: string;
-  user: string;
+  user: {
+    username: string;
+    name: string;
+    id: string;
+  };
 };

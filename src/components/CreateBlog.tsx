@@ -3,44 +3,53 @@ import blogService from "../services/blogs";
 import axios from "axios";
 
 type CreateBlogProps = {
-    setMessage: Dispatch<SetStateAction<string>>
-    setIsError: Dispatch<SetStateAction<boolean>>
-}
+  setMessage: Dispatch<SetStateAction<string>>;
+  setIsError: Dispatch<SetStateAction<boolean>>;
+  handleToggle: () => void;
+};
 
-
-const CreateBlog = ({ setMessage, setIsError }: CreateBlogProps) => {
+const CreateBlog = ({
+  setMessage,
+  setIsError,
+  handleToggle,
+}: CreateBlogProps) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
   const [likes, setLikes] = useState(0);
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
+    handleToggle();
     const blog = {
-        title,
-        author,
-        url,
-        likes
-    }
+      title,
+      author,
+      url,
+      likes,
+    };
 
     try {
-        await blogService.create(blog)
-        setMessage(`a new blog "${blog.title}" by ${blog.author} added`)
+      await blogService.create(blog);
+      setMessage(`a new blog "${blog.title}" by ${blog.author} added`);
     } catch (error) {
-        setIsError(true)
-        if (axios.isAxiosError(error) && error.response) {
-            setMessage(error.response.data.error);
-        } else {
-            setMessage("An unknown error occurred");
-        }
-        console.log(error)
+      setIsError(true);
+      if (axios.isAxiosError(error) && error.response) {
+        setMessage(error.response.data.error);
+      } else {
+        setMessage("An unknown error occurred");
+      }
+      console.log(error);
     } finally {
-        setTimeout(() => {
-            setMessage("")
-            setIsError(false)
-        }, 5000)
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+      setLikes(0);
+      setTimeout(() => {
+        setMessage("");
+        setIsError(false);
+      }, 5000);
     }
-  }
+  };
 
   return (
     <>
@@ -76,7 +85,7 @@ const CreateBlog = ({ setMessage, setIsError }: CreateBlogProps) => {
             />
           </label>
         </div>
-         <div>
+        <div>
           <label>
             likes
             <input

@@ -4,10 +4,13 @@ import Blog from "./Blog";
 type BlogListProps = {
   name: string;
   blogs: BlogType[];
-  handleLogout: (e: React.MouseEvent<HTMLButtonElement>) => {};
+  handleLogout: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 const BlogList = ({ name, blogs, handleLogout }: BlogListProps) => {
+  blogs.sort((a, b) => {
+    return b.likes - a.likes
+  })
   return (
     <>
       <h2>blogs</h2>
