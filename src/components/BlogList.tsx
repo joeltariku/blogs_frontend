@@ -5,9 +5,10 @@ type BlogListProps = {
   name: string;
   blogs: BlogType[];
   handleLogout: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  updateBlogs: (blog: BlogType) => void;
 };
 
-const BlogList = ({ name, blogs, handleLogout }: BlogListProps) => {
+const BlogList = ({ name, blogs, handleLogout, updateBlogs }: BlogListProps) => {
   blogs.sort((a, b) => {
     return b.likes - a.likes
   })
@@ -18,7 +19,7 @@ const BlogList = ({ name, blogs, handleLogout }: BlogListProps) => {
         {name} logged in <button onClick={handleLogout}>Logout</button>
       </p>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlogs={updateBlogs}/>
       ))}
     </>
   );

@@ -4,6 +4,7 @@ import blogService from "../services/blogs";
 
 type BlogProps = {
   blog: BlogType;
+  updateBlogs: (blog: BlogType) => void;
 };
 
 // const Blog = ({ blog }: BlogProps) => (
@@ -26,9 +27,16 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog }: BlogProps) => {
+const Blog = ({ blog, updateBlogs }: BlogProps) => {
   const [showDetailedView, setShowDetailedView] = useState(false);
   const [likes, setLikes] = useState(blog.likes)
+
+  const login = window.localStorage.getItem("loggedInUser");
+  const userData = JSON.parse(login!);
+
+  console.log('username: ', userData.username)
+  console.log('blog user: ', blog.user.username)
+  
 
   const toggleView = () => {
     setShowDetailedView(!showDetailedView);
@@ -58,7 +66,8 @@ const Blog = ({ blog }: BlogProps) => {
     try {
       if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
         await blogService.remove(id);
-      console.log('blog deleted succesfully')
+        updateBlogs(blog)
+        console.log('blog deleted succesfully')
       }
     } catch (error) {
       console.log(error)
@@ -70,20 +79,20 @@ const Blog = ({ blog }: BlogProps) => {
       <div>
         {`${blog.title} by ${blog.author} `}
         {showDetailedView ? (
-          <button onClick={toggleView}>hide</button>
+          <button onClick={toggleView} data-testid="hide-button">hide</button>
         ) : (
-          <button onClick={toggleView}>view</button>
+          <button onClick={toggleView} data-testid="view-button">view</button>
         )}
       </div>
       {showDetailedView && (
         <>
-          <div>{blog.url}</div>
-          <div>
-            likes {likes} <button onClick={addLike}>like</button>
+          <div data-testid="blog-url">{blog.url}</div>
+          <div data-testid="likes">
+            likes {likes} <button onClick={addLike} data-testid="like-button">like</button>
           </div>
-          <div>{blog.user?.name}</div>
+          <div data-testid="username">{blog.user?.name}</div>
           {/* because first blog was created without user */}
-          <button onClick={removeBlog}>remove blog</button>
+          {(userData.username === blog.user.username) && <button onClick={removeBlog}>remove blog</button>}
         </>
       )}
     </div>

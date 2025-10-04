@@ -1,17 +1,20 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import blogService from "../services/blogs";
 import axios from "axios";
+import type { Blog } from "../types/Blog";
 
 type CreateBlogProps = {
   setMessage: Dispatch<SetStateAction<string>>;
   setIsError: Dispatch<SetStateAction<boolean>>;
   handleToggle: () => void;
+  updateBlogs: (blog: Blog) => void
 };
 
 const CreateBlog = ({
   setMessage,
   setIsError,
   handleToggle,
+  updateBlogs
 }: CreateBlogProps) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -29,7 +32,8 @@ const CreateBlog = ({
     };
 
     try {
-      await blogService.create(blog);
+      const createdBlog = await blogService.create(blog);
+      updateBlogs(createdBlog)
       setMessage(`a new blog "${blog.title}" by ${blog.author} added`);
     } catch (error) {
       setIsError(true);
@@ -95,7 +99,7 @@ const CreateBlog = ({
             />
           </label>
         </div>
-        <input type="submit" value="Create" />
+        <input type="submit" value="Create" id="create-blog-button"/>
       </form>
     </>
   );

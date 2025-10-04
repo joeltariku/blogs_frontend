@@ -37,7 +37,7 @@ const LoginForm = ({
             />
           </label>
         </div>
-        <input type="submit" value="Login" />
+        <input type="submit" value="login" id="login-submit"/>
       </form>
     </>
   );

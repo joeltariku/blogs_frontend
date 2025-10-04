@@ -48,7 +48,7 @@ const App = () => {
       setUser(login);
       window.localStorage.setItem("loggedInUser", JSON.stringify(login));
       blogService.setToken(login.token);
-      setMessage("Logged in succesfully");
+      setMessage("Logged in successfully");
     } catch (error) {
       setIsError(true);
       if (axios.isAxiosError(error) && error.response) {
@@ -95,16 +95,17 @@ const App = () => {
       </>
     );
   }
-
+  console.log('blogs: ', blogs)
   return (
     <div>
       <Notification isError={isError} message={message} />
-      <BlogList handleLogout={handleLogout} name={user.name} blogs={blogs} />
+      <BlogList handleLogout={handleLogout} name={user.name} blogs={blogs} updateBlogs={(blog: BlogType) => setBlogs(blogs.filter(b => b.id !== blog.id))}/>
       <Togglable ref={blogFormRef} buttonLabel="create new blog">
         <CreateBlog
           handleToggle={handleToggle}
           setIsError={setIsError}
           setMessage={setMessage}
+          updateBlogs={(blog: BlogType) => setBlogs([...blogs, blog])}
         />
       </Togglable>
     </div>

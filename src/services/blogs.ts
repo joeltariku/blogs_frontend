@@ -31,6 +31,7 @@ const create = async (request: BlogBody) => {
     likes,
   };
   const response = await axios.post(baseUrl, blogCreation, config);
+  console.log(response.data)
   return response.data;
 };
 
