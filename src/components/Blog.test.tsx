@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
-import {describe, it, expect, beforeEach } from 'vitest'
+import {describe, it, expect, beforeEach, afterEach } from 'vitest'
 import Blog from './Blog'
 import type { Blog as BlogType } from '../types/Blog'
 import { vi } from 'vitest'
@@ -9,7 +9,8 @@ import blogService from '../services/blogs'
 
 vi.mock('../services/blogs', () => ({
     default: {
-        edit: vi.fn().mockResolvedValue(undefined)
+        edit: vi.fn().mockResolvedValue(undefined),
+        remove: vi.fn().mockResolvedValue(undefined)
     }
 }))
 
@@ -28,7 +29,14 @@ const mockBlog: BlogType = {
 
 describe('Testing Blog component', () => {
     beforeEach(() => {
+        window.localStorage.setItem(
+            'loggedInUser',
+            JSON.stringify({ username: 'test123', name: 'Joel Tariku', id: 'test-user-id'})
+        )
         render(<Blog blog={mockBlog} updateBlogs={() => {}}/>)
+    })
+    afterEach(() => {
+        vi.restoreAllMocks()
     })
     it('only blog title and author is initially displayed', () => {
         const intro = screen.getByText('Test blog by Joel Tariku')
@@ -38,7 +46,7 @@ describe('Testing Blog component', () => {
         expect(url).not.toBeInTheDocument();
         expect(likes).not.toBeInTheDocument();
     })
-    it('after clicking the button, extra info is displayed', async () => {
+    it('after clicking the view button, extra info is displayed', async () => {
         const user = userEvent.setup()
         const button = screen.getAllByTestId('view-button')
         await user.click(button[0])
@@ -60,5 +68,17 @@ describe('Testing Blog component', () => {
         await user.click(likeBtn[0])
 
         expect(blogService.edit).toHaveBeenCalledTimes(2)
+    })
+    it('after clicking remove blog, blogService.remove is called', async () => {
+        const user = userEvent.setup()
+        vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+        const button = screen.getAllByTestId('view-button')
+        await user.click(button[0])
+
+        const removeBtn = screen.getAllByTestId('remove-button')
+        await user.click(removeBtn[0])
+
+        expect(blogService.remove).toHaveBeenCalledTimes(1)
     })
 })

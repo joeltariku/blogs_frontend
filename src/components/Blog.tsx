@@ -7,18 +7,6 @@ type BlogProps = {
   updateBlogs: (blog: BlogType) => void;
 };
 
-// const Blog = ({ blog }: BlogProps) => (
-//   <>
-//     <Togglable buttonLabel="view" text={`${blog.title} by ${blog.author}`}>
-//       <div>
-//         <div>{blog.url}</div>
-//         <div>likes {blog.likes}</div>
-//         <div>added by {blog.user?.name}</div>
-//       </div>
-//     </Togglable>
-//   </>
-// );
-
 const blogStyle = {
   paddingTop: 10,
   paddingLeft: 2,
@@ -33,9 +21,6 @@ const Blog = ({ blog, updateBlogs }: BlogProps) => {
 
   const login = window.localStorage.getItem("loggedInUser");
   const userData = JSON.parse(login!);
-
-  console.log('username: ', userData.username)
-  console.log('blog user: ', blog.user.username)
   
 
   const toggleView = () => {
@@ -75,7 +60,7 @@ const Blog = ({ blog, updateBlogs }: BlogProps) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-testid="blog-item">
       <div>
         {`${blog.title} by ${blog.author} `}
         {showDetailedView ? (
@@ -92,7 +77,7 @@ const Blog = ({ blog, updateBlogs }: BlogProps) => {
           </div>
           <div data-testid="username">{blog.user?.name}</div>
           {/* because first blog was created without user */}
-          {(userData.username === blog.user.username) && <button onClick={removeBlog}>remove blog</button>}
+          {(userData.username === blog.user.username) && <button data-testid="remove-button" onClick={removeBlog}>remove blog</button>}
         </>
       )}
     </div>

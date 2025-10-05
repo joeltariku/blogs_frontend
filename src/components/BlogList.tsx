@@ -16,7 +16,7 @@ const BlogList = ({ name, blogs, handleLogout, updateBlogs }: BlogListProps) => 
     <>
       <h2>blogs</h2>
       <p>
-        {name} logged in <button onClick={handleLogout}>Logout</button>
+        {name} logged in <button onClick={handleLogout} data-testid="logout-button">Logout</button>
       </p>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} updateBlogs={updateBlogs}/>
