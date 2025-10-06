@@ -51,7 +51,7 @@ const CreateBlog = ({
       setTimeout(() => {
         setMessage("");
         setIsError(false);
-      }, 5000);
+      }, 2000);
     }
   };
 
@@ -66,6 +66,7 @@ const CreateBlog = ({
               type="text"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
+              data-testid="title-input"
             />
           </label>
         </div>
@@ -76,6 +77,7 @@ const CreateBlog = ({
               type="text"
               value={author}
               onChange={(event) => setAuthor(event.target.value)}
+              data-testid="author-input"
             />
           </label>
         </div>
@@ -86,6 +88,7 @@ const CreateBlog = ({
               type="text"
               value={url}
               onChange={(event) => setUrl(event.target.value)}
+              data-testid="url-input"
             />
           </label>
         </div>
@@ -96,10 +99,11 @@ const CreateBlog = ({
               type="number"
               value={likes}
               onChange={(event) => setLikes(Number(event.target.value))}
+              data-testid="likes-input"
             />
           </label>
         </div>
-        <input type="submit" value="Create" id="create-blog-button"/>
+        <input type="submit" value="Create" id="create-blog-button" data-testid="create-blog-button"/>
       </form>
     </>
   );
