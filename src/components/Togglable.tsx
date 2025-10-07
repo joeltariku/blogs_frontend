@@ -29,12 +29,12 @@ const Togglable = (props: TogglableProps, ref: React.Ref<TogglableRef>) => {
     <div>
       <div style={hideWhenVisible}>
         {props?.text && props.text}{" "}
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <button onClick={toggleVisibility} data-testid="view-toggle-content">{props.buttonLabel}</button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
         {props?.text && props.text}{" "}
-        <button onClick={toggleVisibility}>cancel</button>
+        <button onClick={toggleVisibility} data-testid="toggle-cancel-button">cancel</button>
       </div>
     </div>
   );
